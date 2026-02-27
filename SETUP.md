@@ -42,17 +42,15 @@ pip install -r backend/requirements.txt
 
 ## Step 4: Configure Environment Variables
 
-Copy the example environment file and update it:
+Create or update `.env` directly:
 
 ```bash
-# Windows
-copy .env.example .env
-
-# macOS/Linux
-cp .env.example .env
+API_PORT=3001
+PORT=3001
+DATABASE_URL=postgresql://postgres:YOUR_PASSWORD@localhost:5432/call
 ```
 
-Edit `.env` file with your database credentials:
+Then edit `.env` file with your actual database credentials:
 
 ```env
 PORT=3001
@@ -230,8 +228,7 @@ python -m venv .venv
 pip install -r backend\requirements.txt
 
 # 3. Setup environment
-copy .env.example .env
-# Edit .env with your database credentials
+# Create .env and add your database credentials
 
 # 4. Create database
 # In psql: CREATE DATABASE call;

@@ -14,7 +14,9 @@ import { Link, useLocation, Outlet, useNavigate } from "react-router";
 import { cn } from "../lib/utils";
 import { AnimatedBackground } from "./ui/animated-background";
 
-const menuItems = [
+type UserRole = "admin" | "faculty" | "hr";
+
+const adminMenuItems = [
   { icon: LayoutDashboard, label: "Dashboard", path: "/dashboard", theme: "dashboard" as const },
   { icon: Upload, label: "AI Evaluation", path: "/evaluation", theme: "upload" as const },
   { icon: Users, label: "Management", path: "/students", theme: "dashboard" as const },
@@ -24,9 +26,38 @@ const menuItems = [
   { icon: Settings, label: "Settings", path: "/settings", theme: "dashboard" as const },
 ];
 
+const facultyMenuItems = [
+  { icon: LayoutDashboard, label: "Dashboard", path: "/dashboard", theme: "dashboard" as const },
+  { icon: UserCircle, label: "Student Profile", path: "/profile", theme: "profile" as const },
+  { icon: Bell, label: "Notifications", path: "/notifications", theme: "alert" as const },
+];
+
+function getUserRole(): UserRole {
+  const userRaw = localStorage.getItem("apnsUser");
+  if (!userRaw) {
+    return "admin";
+  }
+
+  try {
+    const parsed = JSON.parse(userRaw) as { role?: string };
+    if (parsed.role === "faculty") {
+      return "faculty";
+    }
+    if (parsed.role === "hr") {
+      return "hr";
+    }
+  } catch {
+    return "admin";
+  }
+
+  return "admin";
+}
+
 export function AppLayout() {
   const location = useLocation();
   const navigate = useNavigate();
+  const role = getUserRole();
+  const menuItems = role === "faculty" ? facultyMenuItems : adminMenuItems;
   const currentItem = menuItems.find(item => location.pathname.startsWith(item.path)) || menuItems[0];
 
   const handleSignOut = () => {

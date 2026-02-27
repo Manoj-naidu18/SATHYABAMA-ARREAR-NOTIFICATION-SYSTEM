@@ -44,13 +44,23 @@ async function main() {
 
   console.log(`[dev:all] Using backend port ${selectedPort}`);
 
-  const command = `npx concurrently -n api,web -c cyan,magenta \".\\.venv\\Scripts\\python.exe -m uvicorn backend.main:app --host 0.0.0.0 --port ${selectedPort} --reload\" \"npm:dev\"`;
-
-  const child = spawn(command, {
-    shell: true,
-    stdio: "inherit",
-    env,
-  });
+  const child = spawn(
+    "npx",
+    [
+      "concurrently",
+      "-n",
+      "api,web",
+      "-c",
+      "cyan,magenta",
+      `.\\.venv\\Scripts\\python.exe -m uvicorn backend.main:app --host 0.0.0.0 --port ${selectedPort} --reload`,
+      "npm:dev",
+    ],
+    {
+      shell: true,
+      stdio: "inherit",
+      env,
+    },
+  );
 
   child.on("exit", (code) => {
     process.exit(code ?? 1);

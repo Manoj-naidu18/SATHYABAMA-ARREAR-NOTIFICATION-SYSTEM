@@ -341,7 +341,6 @@ export function LoginPage() {
                       className="w-full rounded-xl border border-white/20 bg-white/5 py-3 px-4 text-foreground focus:border-[#D4AF37] focus:ring-2 focus:ring-[#D4AF37]/20 outline-none transition-all"
                     >
                       <option value="admin">Administrator</option>
-                      <option value="hr">HR Manager</option>
                       <option value="faculty">Faculty</option>
                     </select>
                   </div>

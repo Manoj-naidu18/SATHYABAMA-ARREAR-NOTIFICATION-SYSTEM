@@ -37,8 +37,27 @@ if errorlevel 1 (
 echo.
 echo [5/5] Setting up environment file...
 if not exist .env (
-    copy .env.example .env
-    echo Created .env file - Please edit it with your database credentials
+    (
+        echo API_PORT=3001
+        echo PORT=3001
+        echo DATABASE_URL=postgresql://postgres:123@localhost:5432/call
+        echo.
+        echo # PostgreSQL ^(call database^)
+        echo DB_HOST=localhost
+        echo DB_PORT=5432
+        echo DB_NAME=call
+        echo DB_USER=postgres
+        echo DB_PASSWORD=123
+        echo.
+        echo # DB schema used by this project
+        echo DB_SCHEMA=apns
+        echo.
+        echo # AI analysis ^(Cerebras/Cerebrus^)
+        echo CEREBRUS_API_KEY=
+        echo CEREBRUS_MODEL=llama-3.3-70b
+        echo CEREBRUS_API_BASE_URL=https://api.cerebras.ai/v1
+    ) > .env
+    echo Created .env file with defaults - Please update credentials if needed
 ) else (
     echo .env file already exists - skipping
 )

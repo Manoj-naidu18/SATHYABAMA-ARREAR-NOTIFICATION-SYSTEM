@@ -35,8 +35,27 @@ fi
 echo ""
 echo "[5/5] Setting up environment file..."
 if [ ! -f .env ]; then
-    cp .env.example .env
-    echo "Created .env file - Please edit it with your database credentials"
+    cat > .env << 'EOF'
+API_PORT=3001
+PORT=3001
+DATABASE_URL=postgresql://postgres:123@localhost:5432/call
+
+# PostgreSQL (call database)
+DB_HOST=localhost
+DB_PORT=5432
+DB_NAME=call
+DB_USER=postgres
+DB_PASSWORD=123
+
+# DB schema used by this project
+DB_SCHEMA=apns
+
+# AI analysis (Cerebras/Cerebrus)
+CEREBRUS_API_KEY=
+CEREBRUS_MODEL=llama-3.3-70b
+CEREBRUS_API_BASE_URL=https://api.cerebras.ai/v1
+EOF
+    echo "Created .env file with defaults - Please update credentials if needed"
 else
     echo ".env file already exists - skipping"
 fi
