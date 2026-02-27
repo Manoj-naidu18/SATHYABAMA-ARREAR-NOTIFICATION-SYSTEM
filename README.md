@@ -21,7 +21,7 @@ Sathyabama University's comprehensive student management and notification system
 ✅ Role-based Authentication (Login/Register)  
 ✅ Auto-schema Database Initialization  
 ✅ Memory Fallback Mode  
-✅ Interactive API Documentation  
+✅ Interactive API Documentation
 
 ## Quick Setup
 
@@ -43,15 +43,18 @@ PORT=3001
 ### 3. Run the Application
 
 **Start everything together (recommended):**
+
 ```bash
 npm run dev:all
 ```
 
 This starts:
+
 - FastAPI backend at **http://localhost:3001**
 - React frontend at **http://localhost:5173**
 
 **Or run separately:**
+
 ```bash
 # Frontend only
 npm run dev
@@ -81,6 +84,7 @@ psql -U postgres -d call -f backend/schema.sql
 ## API Documentation
 
 Visit **http://localhost:3001/docs** for interactive Swagger UI documentation where you can:
+
 - Test all API endpoints
 - View request/response schemas
 - See real-time examples
@@ -110,13 +114,13 @@ apns/
 
 ## Available Scripts
 
-| Command | Description |
-|---------|-------------|
-| `npm run dev:all` | Run frontend + backend together |
-| `npm run dev` | Run frontend only (Vite dev server) |
+| Command              | Description                            |
+| -------------------- | -------------------------------------- |
+| `npm run dev:all`    | Run frontend + backend together        |
+| `npm run dev`        | Run frontend only (Vite dev server)    |
 | `npm run server:dev` | Run backend only (FastAPI with reload) |
-| `npm run server` | Run backend in production mode |
-| `npm run build` | Build frontend for production |
+| `npm run server`     | Run backend in production mode         |
+| `npm run build`      | Build frontend for production          |
 
 ## Key Endpoints
 
@@ -132,18 +136,21 @@ apns/
 ## Technology Highlights
 
 ### FastAPI Backend
+
 - **High Performance**: 2-3x faster than Node.js Express
 - **Type Safety**: Automatic request validation with Pydantic
 - **Async Native**: Built for modern async/await patterns
 - **Auto Documentation**: OpenAPI/Swagger generated automatically
 
 ### Frontend
+
 - **Motion Animations**: Smooth, reactive UI transitions
 - **Radix UI**: Accessible component library
 - **React Router 7**: Modern routing solution
 - **Tailwind CSS 4**: Utility-first styling
 
 ### Database
+
 - **asyncpg**: High-performance async PostgreSQL driver
 - **Auto-migrations**: Schema automatically updates on startup
 - **Connection Pooling**: Optimized for concurrent requests
@@ -154,6 +161,7 @@ apns/
 ### Port Already in Use
 
 **Windows PowerShell:**
+
 ```powershell
 Get-NetTCPConnection -LocalPort 3001 | Select-Object -ExpandProperty OwningProcess | ForEach-Object { Stop-Process -Id $_ -Force }
 ```
@@ -172,6 +180,7 @@ curl http://localhost:3001/api/health
 ```
 
 Expected response:
+
 ```json
 {
   "ok": true,
@@ -202,6 +211,37 @@ Expected response:
 
 See [backend/README.md](backend/README.md) and [DEPLOYMENT.md](DEPLOYMENT.md) for detailed production setup.
 
+## Deploy Online (Public)
+
+Use this 2-service setup so everyone can access your app:
+
+1. **Deploy backend to Render**
+
+- Connect this GitHub repo in Render
+- Render will detect [render.yaml](render.yaml)
+- Set required secret env vars in Render:
+  - `DATABASE_URL`
+  - `CEREBRUS_API_KEY` (optional if AI feature not needed)
+- After deploy, copy backend URL (example: `https://apns-backend.onrender.com`)
+
+2. **Set Vercel rewrite to backend URL**
+
+- Open [vercel.json](vercel.json)
+- Replace `https://REPLACE_WITH_BACKEND_URL` with your Render backend URL
+
+3. **Deploy frontend to Vercel**
+
+- Import the same GitHub repo in Vercel
+- Framework: Vite
+- Build command: `npm run build`
+- Output directory: `dist`
+- Deploy
+
+4. **Verify**
+
+- Open your Vercel site URL
+- Check API via `https://<your-vercel-domain>/api/health`
+
 ## License
 
 © 2026 Sathyabama University APNS Project
@@ -209,6 +249,7 @@ See [backend/README.md](backend/README.md) and [DEPLOYMENT.md](DEPLOYMENT.md) fo
 ---
 
 **Need Help?**
+
 - Check `/docs` for API documentation
 - Review backend logs for errors
 - Verify `/api/health` endpoint status

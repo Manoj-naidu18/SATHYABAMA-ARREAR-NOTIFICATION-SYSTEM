@@ -1,0 +1,19 @@
+services:
+  - type: web
+    name: apns-backend
+    env: python
+    plan: free
+    rootDir: .
+    buildCommand: pip install -r backend/requirements.txt
+    startCommand: uvicorn backend.main:app --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: DATABASE_URL
+        sync: false
+      - key: DB_SCHEMA
+        value: apns
+      - key: CEREBRUS_API_KEY
+        sync: false
+      - key: CEREBRUS_MODEL
+        value: llama-3.3-70b
+      - key: CEREBRUS_API_BASE_URL
+        value: https://api.cerebras.ai/v1
