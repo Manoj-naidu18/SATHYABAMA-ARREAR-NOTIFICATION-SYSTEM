@@ -1,0 +1,21 @@
+# FastAPI Backend Requirements
+# Run: pip install -r requirements.txt
+
+# Web Framework
+fastapi==0.115.0
+uvicorn[standard]==0.30.0
+
+# Database
+asyncpg==0.30.0
+
+# Configuration & Validation
+python-dotenv==1.0.1
+pydantic==2.9.2
+python-multipart==0.0.9
+openpyxl==3.1.5
+pypdf==4.3.1
+
+# Additional dependencies (installed automatically)
+# - starlette (FastAPI dependency)
+# - anyio (async support)
+# - typing-extensions (type hints)
