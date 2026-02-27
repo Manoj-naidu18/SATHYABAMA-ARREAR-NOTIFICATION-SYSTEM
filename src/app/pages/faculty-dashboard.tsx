@@ -15,7 +15,9 @@ type Notification = {
 
 function statusVariant(status: string) {
   const normalized = String(status || "").toLowerCase();
-  if (["sent", "delivered", "opened", "read", "completed"].includes(normalized)) {
+  if (
+    ["sent", "delivered", "opened", "read", "completed"].includes(normalized)
+  ) {
     return "success";
   }
   return "pending";
@@ -63,7 +65,9 @@ export function FacultyDashboardPage() {
   }, []);
 
   const sentCount = useMemo(
-    () => notifications.filter((item) => statusVariant(item.status) === "success").length,
+    () =>
+      notifications.filter((item) => statusVariant(item.status) === "success")
+        .length,
     [notifications],
   );
 
@@ -95,8 +99,12 @@ export function FacultyDashboardPage() {
         <GlassCard className="p-6">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm text-muted-foreground">Sent Notifications</p>
-              <h3 className="text-2xl font-bold mt-1">{loading ? "..." : sentCount}</h3>
+              <p className="text-sm text-muted-foreground">
+                Sent Notifications
+              </p>
+              <h3 className="text-2xl font-bold mt-1">
+                {loading ? "..." : sentCount}
+              </h3>
             </div>
             <CheckCircle2 className="h-8 w-8 text-[#D4AF37]" />
           </div>
@@ -105,8 +113,12 @@ export function FacultyDashboardPage() {
         <GlassCard className="p-6">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm text-muted-foreground">Pending Notifications</p>
-              <h3 className="text-2xl font-bold mt-1">{loading ? "..." : pendingCount}</h3>
+              <p className="text-sm text-muted-foreground">
+                Pending Notifications
+              </p>
+              <h3 className="text-2xl font-bold mt-1">
+                {loading ? "..." : pendingCount}
+              </h3>
             </div>
             <Clock className="h-8 w-8 text-[#D4AF37]" />
           </div>
@@ -117,7 +129,9 @@ export function FacultyDashboardPage() {
         <GlassCard className="p-6 lg:col-span-2" glow>
           <div className="flex items-center gap-2 mb-4">
             <BellRing className="h-5 w-5 text-[#D4AF37]" />
-            <h3 className="text-lg font-bold text-[#D4AF37]">Recent Notifications</h3>
+            <h3 className="text-lg font-bold text-[#D4AF37]">
+              Recent Notifications
+            </h3>
           </div>
           <div className="space-y-3">
             {recentNotifications.length === 0 ? (
@@ -130,8 +144,12 @@ export function FacultyDashboardPage() {
                   key={item.id}
                   className="rounded-xl border border-white/20 bg-white/5 px-4 py-3"
                 >
-                  <p className="text-sm font-medium">{item.student_name || `Student #${item.student_id}`}</p>
-                  <p className="text-sm text-muted-foreground mt-1">{item.message}</p>
+                  <p className="text-sm font-medium">
+                    {item.student_name || `Student #${item.student_id}`}
+                  </p>
+                  <p className="text-sm text-muted-foreground mt-1">
+                    {item.message}
+                  </p>
                 </div>
               ))
             )}
@@ -144,10 +162,16 @@ export function FacultyDashboardPage() {
             <h3 className="text-lg font-bold text-[#D4AF37]">Quick Access</h3>
           </div>
           <div className="space-y-3 text-sm">
-            <Link to="/profile" className="block rounded-lg px-3 py-2 bg-white/5 hover:bg-white/10 transition-colors">
+            <Link
+              to="/profile"
+              className="block rounded-lg px-3 py-2 bg-white/5 hover:bg-white/10 transition-colors"
+            >
               Open Profile
             </Link>
-            <Link to="/notifications" className="block rounded-lg px-3 py-2 bg-white/5 hover:bg-white/10 transition-colors">
+            <Link
+              to="/notifications"
+              className="block rounded-lg px-3 py-2 bg-white/5 hover:bg-white/10 transition-colors"
+            >
               View Notifications
             </Link>
           </div>

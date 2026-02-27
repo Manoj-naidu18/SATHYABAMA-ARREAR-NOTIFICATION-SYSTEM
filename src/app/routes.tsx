@@ -83,10 +83,7 @@ export const router = createBrowserRouter([
   {
     path: "/",
     element: (
-      <Navigate
-        to={hasAuthenticatedUser() ? "/dashboard" : "/login"}
-        replace
-      />
+      <Navigate to={hasAuthenticatedUser() ? "/dashboard" : "/login"} replace />
     ),
   },
   {

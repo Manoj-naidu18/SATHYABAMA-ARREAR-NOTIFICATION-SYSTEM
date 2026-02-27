@@ -1,14 +1,14 @@
 import { motion, AnimatePresence } from "motion/react";
-import { 
-  LayoutDashboard, 
-  Upload, 
-  Users, 
-  UserCircle, 
-  Bell, 
-  BarChart3, 
-  Settings, 
+import {
+  LayoutDashboard,
+  Upload,
+  Users,
+  UserCircle,
+  Bell,
+  BarChart3,
+  Settings,
   LogOut,
-  ChevronRight
+  ChevronRight,
 } from "lucide-react";
 import { Link, useLocation, Outlet, useNavigate } from "react-router";
 import { cn } from "../lib/utils";
@@ -17,19 +17,69 @@ import { AnimatedBackground } from "./ui/animated-background";
 type UserRole = "admin" | "faculty" | "hr";
 
 const adminMenuItems = [
-  { icon: LayoutDashboard, label: "Dashboard", path: "/dashboard", theme: "dashboard" as const },
-  { icon: Upload, label: "AI Evaluation", path: "/evaluation", theme: "upload" as const },
-  { icon: Users, label: "Management", path: "/students", theme: "dashboard" as const },
-  { icon: UserCircle, label: "Student Profile", path: "/profile", theme: "profile" as const },
-  { icon: Bell, label: "Notifications", path: "/notifications", theme: "alert" as const },
-  { icon: BarChart3, label: "Analytics", path: "/analytics", theme: "analytics" as const },
-  { icon: Settings, label: "Settings", path: "/settings", theme: "dashboard" as const },
+  {
+    icon: LayoutDashboard,
+    label: "Dashboard",
+    path: "/dashboard",
+    theme: "dashboard" as const,
+  },
+  {
+    icon: Upload,
+    label: "AI Evaluation",
+    path: "/evaluation",
+    theme: "upload" as const,
+  },
+  {
+    icon: Users,
+    label: "Management",
+    path: "/students",
+    theme: "dashboard" as const,
+  },
+  {
+    icon: UserCircle,
+    label: "Student Profile",
+    path: "/profile",
+    theme: "profile" as const,
+  },
+  {
+    icon: Bell,
+    label: "Notifications",
+    path: "/notifications",
+    theme: "alert" as const,
+  },
+  {
+    icon: BarChart3,
+    label: "Analytics",
+    path: "/analytics",
+    theme: "analytics" as const,
+  },
+  {
+    icon: Settings,
+    label: "Settings",
+    path: "/settings",
+    theme: "dashboard" as const,
+  },
 ];
 
 const facultyMenuItems = [
-  { icon: LayoutDashboard, label: "Dashboard", path: "/dashboard", theme: "dashboard" as const },
-  { icon: UserCircle, label: "Student Profile", path: "/profile", theme: "profile" as const },
-  { icon: Bell, label: "Notifications", path: "/notifications", theme: "alert" as const },
+  {
+    icon: LayoutDashboard,
+    label: "Dashboard",
+    path: "/dashboard",
+    theme: "dashboard" as const,
+  },
+  {
+    icon: UserCircle,
+    label: "Student Profile",
+    path: "/profile",
+    theme: "profile" as const,
+  },
+  {
+    icon: Bell,
+    label: "Notifications",
+    path: "/notifications",
+    theme: "alert" as const,
+  },
 ];
 
 function getUserRole(): UserRole {
@@ -58,7 +108,9 @@ export function AppLayout() {
   const navigate = useNavigate();
   const role = getUserRole();
   const menuItems = role === "faculty" ? facultyMenuItems : adminMenuItems;
-  const currentItem = menuItems.find(item => location.pathname.startsWith(item.path)) || menuItems[0];
+  const currentItem =
+    menuItems.find((item) => location.pathname.startsWith(item.path)) ||
+    menuItems[0];
 
   const handleSignOut = () => {
     localStorage.removeItem("apnsUser");
@@ -68,7 +120,7 @@ export function AppLayout() {
   return (
     <div className="flex min-h-screen">
       <AnimatedBackground type={currentItem.theme} />
-      
+
       {/* Sidebar */}
       <aside className="fixed left-0 top-0 z-50 h-screen w-64 border-r border-white/20 bg-white/5 backdrop-blur-[20px]">
         <div className="flex h-20 items-center px-6">
@@ -76,7 +128,9 @@ export function AppLayout() {
             <div className="h-8 w-8 rounded-lg bg-[#D4AF37] flex items-center justify-center">
               <span className="text-white font-bold text-xl">A</span>
             </div>
-            <span className="text-sm font-semibold tracking-tight text-[#D4AF37]">SATHYABAMA ARREAR NOTIFICATION SYSTEM</span>
+            <span className="text-sm font-semibold tracking-tight text-[#D4AF37]">
+              SATHYABAMA ARREAR NOTIFICATION SYSTEM
+            </span>
           </div>
         </div>
 
@@ -89,12 +143,17 @@ export function AppLayout() {
                 to={item.path}
                 className={cn(
                   "group relative flex items-center gap-3 rounded-xl px-4 py-3 transition-all duration-300",
-                  isActive 
-                    ? "bg-[#D4AF37] text-white shadow-lg shadow-[#D4AF37]/20" 
-                    : "text-muted-foreground hover:bg-white/10 hover:text-foreground"
+                  isActive
+                    ? "bg-[#D4AF37] text-white shadow-lg shadow-[#D4AF37]/20"
+                    : "text-muted-foreground hover:bg-white/10 hover:text-foreground",
                 )}
               >
-                <item.icon className={cn("h-5 w-5", isActive ? "text-white" : "text-[#D4AF37]")} />
+                <item.icon
+                  className={cn(
+                    "h-5 w-5",
+                    isActive ? "text-white" : "text-[#D4AF37]",
+                  )}
+                />
                 <span className="font-medium">{item.label}</span>
                 {isActive && (
                   <motion.div

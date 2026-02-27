@@ -27,6 +27,7 @@ This will install all frontend dependencies (React, Vite, Tailwind, etc.)
 ## Step 3: Setup Python Virtual Environment
 
 ### On Windows:
+
 ```bash
 python -m venv .venv
 .venv\Scripts\activate
@@ -34,6 +35,7 @@ pip install -r backend\requirements.txt
 ```
 
 ### On macOS/Linux:
+
 ```bash
 python3 -m venv .venv
 source .venv/bin/activate
@@ -86,17 +88,20 @@ npm run dev:all
 ```
 
 This starts:
+
 - ✅ FastAPI backend at **http://localhost:3001**
 - ✅ React frontend at **http://localhost:5173**
 
 ### Option 2: Run Separately
 
 **Terminal 1 - Backend:**
+
 ```bash
 npm run server:dev
 ```
 
 **Terminal 2 - Frontend:**
+
 ```bash
 npm run dev
 ```
@@ -106,9 +111,11 @@ npm run dev
 ### Check if everything is running:
 
 1. **Backend Health Check:**
+
    ```bash
    curl http://localhost:3001/api/health
    ```
+
    Expected: `{"ok": true, "dbConnected": true, "mode": "postgres"}`
 
 2. **Frontend:**
@@ -119,12 +126,12 @@ npm run dev
 
 ## Available Commands
 
-| Command | Description |
-|---------|-------------|
-| `npm run dev:all` | Start both frontend and backend |
-| `npm run dev` | Start frontend only (Vite) |
-| `npm run server:dev` | Start backend only (FastAPI) |
-| `npm run build` | Build frontend for production |
+| Command              | Description                     |
+| -------------------- | ------------------------------- |
+| `npm run dev:all`    | Start both frontend and backend |
+| `npm run dev`        | Start frontend only (Vite)      |
+| `npm run server:dev` | Start backend only (FastAPI)    |
+| `npm run build`      | Build frontend for production   |
 
 ## Project Structure
 
@@ -149,11 +156,13 @@ apns/
 ### Port Already in Use
 
 **Windows:**
+
 ```powershell
 Get-NetTCPConnection -LocalPort 3001 | Select-Object -ExpandProperty OwningProcess | ForEach-Object { Stop-Process -Id $_ -Force }
 ```
 
 **macOS/Linux:**
+
 ```bash
 lsof -ti:3001 | xargs kill -9
 ```
@@ -168,6 +177,7 @@ lsof -ti:3001 | xargs kill -9
 ### Python Module Not Found
 
 Make sure virtual environment is activated:
+
 ```bash
 # Windows
 .venv\Scripts\activate
@@ -177,6 +187,7 @@ source .venv/bin/activate
 ```
 
 Then reinstall dependencies:
+
 ```bash
 pip install -r backend/requirements.txt
 ```
@@ -191,6 +202,7 @@ npm install
 ## Dependencies Overview
 
 ### Python Dependencies (backend/requirements.txt)
+
 - `fastapi` - Web framework
 - `uvicorn` - ASGI server
 - `asyncpg` - PostgreSQL driver
@@ -198,6 +210,7 @@ npm install
 - `python-dotenv` - Environment variables
 
 ### Node.js Dependencies (package.json)
+
 - `react` - UI library
 - `vite` - Build tool
 - `tailwindcss` - CSS framework

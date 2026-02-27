@@ -382,7 +382,9 @@ export function LoginPage() {
 
             <div className="mt-8 flex items-center justify-center gap-2 text-sm text-muted-foreground">
               <ShieldCheck className="h-4 w-4 text-[#D4AF37]" />
-              <span>Sathyabama Arrear Notification System Secure Authentication</span>
+              <span>
+                Sathyabama Arrear Notification System Secure Authentication
+              </span>
             </div>
           </GlassCard>
 
