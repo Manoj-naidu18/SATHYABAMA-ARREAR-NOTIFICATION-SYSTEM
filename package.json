@@ -6,9 +6,9 @@
   "scripts": {
     "build": "vite build",
     "dev": "vite",
-    "dev:all": "concurrently -n api,web -c cyan,magenta \"C:/Users/Manoj/Desktop/apns/.venv/Scripts/python.exe -m uvicorn backend.main:app --host 0.0.0.0 --port 3001 --reload\" \"npm:dev\"",
-    "server": "C:/Users/Manoj/Desktop/apns/.venv/Scripts/python.exe -m uvicorn backend.main:app --host 0.0.0.0 --port 3001",
-    "server:dev": "C:/Users/Manoj/Desktop/apns/.venv/Scripts/python.exe -m uvicorn backend.main:app --host 0.0.0.0 --port 3001 --reload"
+    "dev:all": "node ./scripts/dev-all.mjs",
+    "server": "node ./scripts/run-backend.mjs",
+    "server:dev": "node ./scripts/run-backend.mjs --reload"
   },
   "dependencies": {
     "@emotion/react": "11.14.0",
