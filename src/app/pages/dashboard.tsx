@@ -11,6 +11,7 @@ import {
 } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { GlassCard, GoldButton } from "../components/ui/shared";
+import { apiUrl } from "../lib/api";
 import { cn } from "../lib/utils";
 import {
   AreaChart,
@@ -84,8 +85,8 @@ export function DashboardPage() {
         setError(null);
 
         const [studentsResponse, notificationsResponse] = await Promise.all([
-          fetch("/api/students"),
-          fetch("/api/notifications"),
+          fetch(apiUrl("/api/students")),
+          fetch(apiUrl("/api/notifications")),
         ]);
 
         if (!studentsResponse.ok) {

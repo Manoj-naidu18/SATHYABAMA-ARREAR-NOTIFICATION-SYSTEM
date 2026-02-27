@@ -11,6 +11,7 @@ import {
 } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { GlassCard, GoldButton } from "../components/ui/shared";
+import { apiUrl } from "../lib/api";
 import { cn } from "../lib/utils";
 
 type NotificationItem = {
@@ -45,7 +46,7 @@ export function NotificationCenterPage() {
         setLoading(true);
         setError(null);
 
-        const response = await fetch("/api/notifications");
+        const response = await fetch(apiUrl("/api/notifications"));
         if (!response.ok) {
           throw new Error("Failed to load notifications");
         }

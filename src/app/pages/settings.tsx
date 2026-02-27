@@ -11,6 +11,7 @@ import {
 import { useEffect, useState } from "react";
 import { GlassCard, GoldButton } from "../components/ui/shared";
 import { toast } from "sonner";
+import { apiUrl } from "../lib/api";
 
 type HealthResponse = {
   ok: boolean;
@@ -47,7 +48,7 @@ export function SettingsPage() {
     async function loadHealth() {
       try {
         setLoadingHealth(true);
-        const response = await fetch("/api/health");
+        const response = await fetch(apiUrl("/api/health"));
         if (!response.ok) {
           throw new Error("Unable to fetch health status");
         }

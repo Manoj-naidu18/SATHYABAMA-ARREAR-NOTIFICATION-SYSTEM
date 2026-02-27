@@ -13,6 +13,7 @@ import {
   SendHorizontal,
 } from "lucide-react";
 import { GlassCard, GoldButton } from "../components/ui/shared";
+import { apiUrl } from "../lib/api";
 import { cn } from "../lib/utils";
 import { useNavigate } from "react-router";
 
@@ -40,7 +41,7 @@ export function StudentManagementPage() {
         setLoading(true);
         setError(null);
 
-        const response = await fetch("/api/students");
+        const response = await fetch(apiUrl("/api/students"));
         if (!response.ok) {
           const payload = await response.json().catch(() => null);
           throw new Error(payload?.error || "Failed to fetch students");

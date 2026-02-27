@@ -14,6 +14,7 @@ import {
 import { useEffect, useState } from "react";
 import { GlassCard, GoldButton } from "../components/ui/shared";
 import { toast } from "sonner";
+import { apiUrl } from "../lib/api";
 
 type EvaluationResult = {
   fileName: string;
@@ -71,7 +72,7 @@ export function EvaluationPage() {
       const formData = new FormData();
       formData.append("file", selectedFile);
 
-      const response = await fetch("/api/evaluation/analyze-document", {
+      const response = await fetch(apiUrl("/api/evaluation/analyze-document"), {
         method: "POST",
         body: formData,
       });

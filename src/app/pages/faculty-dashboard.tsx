@@ -3,6 +3,7 @@ import { motion } from "motion/react";
 import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router";
 import { GlassCard } from "../components/ui/shared";
+import { apiUrl } from "../lib/api";
 
 type Notification = {
   id: number;
@@ -36,7 +37,7 @@ export function FacultyDashboardPage() {
         setLoading(true);
         setError(null);
 
-        const response = await fetch("/api/notifications");
+        const response = await fetch(apiUrl("/api/notifications"));
         if (!response.ok) {
           throw new Error("Failed to load notifications");
         }

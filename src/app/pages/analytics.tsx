@@ -8,6 +8,7 @@ import {
 } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { GlassCard, GoldButton } from "../components/ui/shared";
+import { apiUrl } from "../lib/api";
 import {
   BarChart,
   Bar,
@@ -66,8 +67,8 @@ export function AnalyticsPage() {
         setError(null);
 
         const [studentsResponse, notificationsResponse] = await Promise.all([
-          fetch("/api/students"),
-          fetch("/api/notifications"),
+          fetch(apiUrl("/api/students")),
+          fetch(apiUrl("/api/notifications")),
         ]);
 
         if (!studentsResponse.ok) throw new Error("Failed to load students");

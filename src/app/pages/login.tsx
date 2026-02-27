@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { LogIn, ShieldCheck, Mail, Lock, User } from "lucide-react";
 import { useNavigate } from "react-router";
 import { GlassCard, GoldButton } from "../components/ui/shared";
+import { apiUrl } from "../lib/api";
 import logoImg from "../../assets/4b35c7bc4c6a88b42d39cda172ff55d3ddce0d64.png";
 import bgImage from "../../assets/sathyabama-gate.jpg";
 
@@ -21,7 +22,7 @@ export function LoginPage() {
   });
 
   useEffect(() => {
-    fetch("/api/health", { method: "GET" }).catch(() => undefined);
+    fetch(apiUrl("/api/health"), { method: "GET" }).catch(() => undefined);
   }, []);
 
   const handleChange = (
@@ -47,7 +48,7 @@ export function LoginPage() {
 
     setIsSubmitting(true);
     try {
-      const response = await fetch("/api/auth/login", {
+      const response = await fetch(apiUrl("/api/auth/login"), {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -84,7 +85,7 @@ export function LoginPage() {
 
     setIsSubmitting(true);
     try {
-      const response = await fetch("/api/auth/register", {
+      const response = await fetch(apiUrl("/api/auth/register"), {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
