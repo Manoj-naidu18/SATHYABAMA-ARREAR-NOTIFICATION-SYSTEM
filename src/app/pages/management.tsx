@@ -11,6 +11,7 @@ import {
   ArrowUpDown,
   FileText,
   SendHorizontal,
+  PhoneCall,
 } from "lucide-react";
 import { GlassCard, GoldButton } from "../components/ui/shared";
 import { apiUrl } from "../lib/api";
@@ -176,7 +177,10 @@ export function StudentManagementPage() {
                     key={student.id}
                     className="group hover:bg-white/5 transition-colors cursor-pointer"
                     onClick={() => {
-                      localStorage.setItem("selectedStudentRollNo", student.roll_no);
+                      localStorage.setItem(
+                        "selectedStudentRollNo",
+                        student.roll_no,
+                      );
                       navigate(`/profile/${student.roll_no}`);
                     }}
                   >
@@ -193,7 +197,10 @@ export function StudentManagementPage() {
                           className="font-medium hover:text-[#D4AF37] hover:underline text-left"
                           onClick={(event) => {
                             event.stopPropagation();
-                            localStorage.setItem("selectedStudentRollNo", student.roll_no);
+                            localStorage.setItem(
+                              "selectedStudentRollNo",
+                              student.roll_no,
+                            );
                             navigate(`/profile/${student.roll_no}`);
                           }}
                         >

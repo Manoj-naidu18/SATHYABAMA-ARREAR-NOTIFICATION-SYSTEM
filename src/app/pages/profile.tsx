@@ -11,6 +11,7 @@ import {
   ShieldAlert,
   MessageSquare,
   Send,
+  PhoneCall,
 } from "lucide-react";
 import { GlassCard, GoldButton } from "../components/ui/shared";
 import { cn } from "../lib/utils";
@@ -68,7 +69,9 @@ export function StudentProfilePage() {
 
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [profileData, setProfileData] = useState<StudentProfilePayload | null>(null);
+  const [profileData, setProfileData] = useState<StudentProfilePayload | null>(
+    null,
+  );
 
   useEffect(() => {
     let mounted = true;
@@ -84,7 +87,9 @@ export function StudentProfilePage() {
         setLoading(true);
         setError(null);
 
-        const response = await fetch(`/api/students/${encodeURIComponent(effectiveRollNo)}`);
+        const response = await fetch(
+          `/api/students/${encodeURIComponent(effectiveRollNo)}`,
+        );
         if (!response.ok) {
           const payload = await response.json().catch(() => null);
           throw new Error(payload?.detail || "Failed to load student profile");
@@ -93,11 +98,16 @@ export function StudentProfilePage() {
         const payload = (await response.json()) as StudentProfilePayload;
         if (mounted) {
           setProfileData(payload);
-          localStorage.setItem("selectedStudentRollNo", payload.student.roll_no || effectiveRollNo);
+          localStorage.setItem(
+            "selectedStudentRollNo",
+            payload.student.roll_no || effectiveRollNo,
+          );
         }
       } catch (err) {
         if (mounted) {
-          setError(err instanceof Error ? err.message : "Unable to load profile");
+          setError(
+            err instanceof Error ? err.message : "Unable to load profile",
+          );
           setProfileData(null);
         }
       } finally {
@@ -115,19 +125,26 @@ export function StudentProfilePage() {
   }, [effectiveRollNo]);
 
   const student = profileData?.student;
-  const notifications = Array.isArray(profileData?.notifications) ? profileData.notifications : [];
-  const alertActions = Array.isArray(profileData?.alertActions) ? profileData.alertActions : [];
+  const notifications = Array.isArray(profileData?.notifications)
+    ? profileData.notifications
+    : [];
+  const alertActions = Array.isArray(profileData?.alertActions)
+    ? profileData.alertActions
+    : [];
 
   const arrearsCount = Number(student?.arrears_count || 0);
   const parentPhone = String(student?.parent_phone || "").trim();
-  const parentEmail = String(student?.parent_email || student?.email || "").trim();
+  const parentEmail = String(
+    student?.parent_email || student?.email || "",
+  ).trim();
   const phoneDigits = parentPhone.replace(/\D/g, "");
 
   const arrearDetails = useMemo(() => {
     if (arrearsCount < 1) return [];
 
     return Array.from({ length: arrearsCount }).map((_, index) => {
-      const severity = arrearsCount > 3 ? "High" : arrearsCount >= 2 ? "Medium" : "Low";
+      const severity =
+        arrearsCount > 3 ? "High" : arrearsCount >= 2 ? "Medium" : "Low";
       return {
         subject: `Detected Arrear Subject ${index + 1}`,
         code: `ARR${String(index + 1).padStart(3, "0")}`,
@@ -144,10 +161,10 @@ export function StudentProfilePage() {
     }
 
     const text = encodeURIComponent(
-      `Hello, this is regarding ${student?.name || "student"} (${student?.roll_no || effectiveRollNo}) academic follow-up.`
+      `Hello, this is regarding ${student?.name || "student"} (${student?.roll_no || effectiveRollNo}) academic follow-up.`,
     );
     const smsBody = encodeURIComponent(
-      `Hello, this is regarding ${student?.name || "student"} (${student?.roll_no || effectiveRollNo}) academic follow-up.`
+      `Hello, this is regarding ${student?.name || "student"} (${student?.roll_no || effectiveRollNo}) academic follow-up.`,
     );
     const smsUrl = `sms:${phoneDigits}?body=${smsBody}`;
 
@@ -163,7 +180,7 @@ export function StudentProfilePage() {
     const opened = window.open(
       `https://wa.me/${phoneDigits}?text=${text}`,
       "_blank",
-      "noopener,noreferrer"
+      "noopener,noreferrer",
     );
     if (!opened) {
       window.location.href = smsUrl;
@@ -177,14 +194,16 @@ export function StudentProfilePage() {
     }
 
     const useFreeCall = window.confirm(
-      "Press OK for free internet call (Jitsi link). Press Cancel for direct phone call."
+      "Press OK for free internet call (Jitsi link). Press Cancel for direct phone call.",
     );
 
     if (!useFreeCall) {
       if (phoneDigits) {
         window.location.href = `tel:${phoneDigits}`;
       } else {
-        alert("Direct phone call is not available. Parent phone number missing.");
+        alert(
+          "Direct phone call is not available. Parent phone number missing.",
+        );
       }
       return;
     }
@@ -203,13 +222,13 @@ export function StudentProfilePage() {
       }
     } else if (parentEmail) {
       const subject = encodeURIComponent(
-        `Free Parent Call Link: ${student?.name || "Student"} (${student?.roll_no || effectiveRollNo})`
+        `Free Parent Call Link: ${student?.name || "Student"} (${student?.roll_no || effectiveRollNo})`,
       );
       const body = encodeURIComponent(inviteText);
       window.open(
         `https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(parentEmail)}&su=${subject}&body=${body}`,
         "_blank",
-        "noopener,noreferrer"
+        "noopener,noreferrer",
       );
     }
 
@@ -218,10 +237,10 @@ export function StudentProfilePage() {
 
   const handleSendAlert = () => {
     const subject = encodeURIComponent(
-      `Academic Alert: ${student?.name || "Student"} (${student?.roll_no || effectiveRollNo})`
+      `Academic Alert: ${student?.name || "Student"} (${student?.roll_no || effectiveRollNo})`,
     );
     const body = encodeURIComponent(
-      `Dear Parent,\n\nThis is an academic alert regarding ${student?.name || "your ward"}.\nCurrent arrear subjects: ${arrearsCount}.\nPlease connect with the department for support.\n\nRegards,\nAcademic Team`
+      `Dear Parent,\n\nThis is an academic alert regarding ${student?.name || "your ward"}.\nCurrent arrear subjects: ${arrearsCount}.\nPlease connect with the department for support.\n\nRegards,\nAcademic Team`,
     );
 
     if (parentEmail) {
@@ -238,22 +257,65 @@ export function StudentProfilePage() {
     alert("No parent email or phone available to send alert.");
   };
 
+  const handleTwilioCall = async () => {
+    if (!phoneDigits) {
+      alert("Parent phone number is not available.");
+      return;
+    }
+
+    try {
+      const response = await fetch(`/api/call`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          to: phoneDigits,
+          studentName: student?.name || "Student",
+          rollNo: student?.roll_no || effectiveRollNo,
+        }),
+      });
+
+      if (!response.ok) {
+        const payload = await response.json().catch(() => null);
+        throw new Error(payload?.detail || "Failed to initiate call");
+      }
+
+      const result = await response.json();
+      alert(`Call initiated successfully to ${phoneDigits}`);
+    } catch (err) {
+      alert(err instanceof Error ? err.message : "Failed to initiate call");
+    }
+  };
+
   if (loading) {
-    return <div className="max-w-6xl mx-auto p-8 text-muted-foreground">Loading student profile...</div>;
+    return (
+      <div className="max-w-6xl mx-auto p-8 text-muted-foreground">
+        Loading student profile...
+      </div>
+    );
   }
 
   if (!effectiveRollNo) {
     return (
       <div className="max-w-6xl mx-auto p-8 space-y-4">
         <h2 className="text-xl font-bold">No student selected</h2>
-        <p className="text-muted-foreground">Open Management and click a student to load real profile details.</p>
-        <GoldButton onClick={() => navigate("/students")}>Open Management</GoldButton>
+        <p className="text-muted-foreground">
+          Open Management and click a student to load real profile details.
+        </p>
+        <GoldButton onClick={() => navigate("/students")}>
+          Open Management
+        </GoldButton>
       </div>
     );
   }
 
   if (error || !student) {
-    return <div className="max-w-6xl mx-auto p-8 text-red-500">{error || "Student not found"}</div>;
+    return (
+      <div className="max-w-6xl mx-auto p-8 text-red-500">
+        {error || "Student not found"}
+      </div>
+    );
   }
 
   return (
@@ -263,7 +325,11 @@ export function StudentProfilePage() {
           <div className="relative">
             <div className="h-32 w-32 rounded-2xl bg-[#D4AF37]/10 border-2 border-[#D4AF37]/30 overflow-hidden">
               {student.photo_url ? (
-                <img src={student.photo_url} alt={student.name} className="h-full w-full object-cover" />
+                <img
+                  src={student.photo_url}
+                  alt={student.name}
+                  className="h-full w-full object-cover"
+                />
               ) : (
                 <div className="h-full w-full flex items-center justify-center">
                   <User className="h-16 w-16 text-[#D4AF37]" />
@@ -278,17 +344,38 @@ export function StudentProfilePage() {
           <div className="flex-1 space-y-4">
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
               <div>
-                <h1 className="text-3xl font-bold tracking-tight">{student.name}</h1>
-                <p className="text-[#D4AF37] font-mono text-sm">{student.roll_no}</p>
+                <h1 className="text-3xl font-bold tracking-tight">
+                  {student.name}
+                </h1>
+                <p className="text-[#D4AF37] font-mono text-sm">
+                  {student.roll_no}
+                </p>
               </div>
               <div className="flex gap-3">
-                <GoldButton variant="secondary" icon={Phone} onClick={handleCallParent}>
+                <GoldButton
+                  variant="secondary"
+                  icon={Phone}
+                  onClick={handleCallParent}
+                >
+                  Start Meeting
+                </GoldButton>
+                <GoldButton
+                  variant="secondary"
+                  icon={PhoneCall}
+                  onClick={handleTwilioCall}
+                >
                   Call Parent
                 </GoldButton>
-                <GoldButton variant="secondary" icon={MessageSquare} onClick={handleChatWithParent}>
+                <GoldButton
+                  variant="secondary"
+                  icon={MessageSquare}
+                  onClick={handleChatWithParent}
+                >
                   Chat with Parent
                 </GoldButton>
-                <GoldButton icon={Send} onClick={handleSendAlert}>Send Alert</GoldButton>
+                <GoldButton icon={Send} onClick={handleSendAlert}>
+                  Send Alert
+                </GoldButton>
               </div>
             </div>
 
@@ -303,7 +390,9 @@ export function StudentProfilePage() {
               </div>
               <div className="flex items-center gap-2 text-sm text-muted-foreground">
                 <MapPin className="h-4 w-4 text-[#D4AF37]" />
-                <span>Parent contact: {student.parent_phone || "Not available"}</span>
+                <span>
+                  Parent contact: {student.parent_phone || "Not available"}
+                </span>
               </div>
             </div>
           </div>
@@ -318,7 +407,9 @@ export function StudentProfilePage() {
             </h3>
             <div className="space-y-4">
               <div>
-                <p className="text-xs text-muted-foreground uppercase tracking-widest font-bold">Primary Contact</p>
+                <p className="text-xs text-muted-foreground uppercase tracking-widest font-bold">
+                  Primary Contact
+                </p>
                 <p className="font-medium mt-1">Parent / Guardian</p>
               </div>
               <div className="flex items-center gap-3 text-sm">
@@ -338,21 +429,31 @@ export function StudentProfilePage() {
 
           <GlassCard className="p-6">
             <h3 className="text-lg font-bold mb-4 flex items-center gap-2">
-              <History className="h-5 w-5 text-[#D4AF37]" /> Notification History
+              <History className="h-5 w-5 text-[#D4AF37]" /> Notification
+              History
             </h3>
             <div className="space-y-4">
               {notifications.length ? (
                 notifications.map((log) => (
-                  <div key={log.id} className="flex justify-between items-center text-sm border-b border-white/5 pb-2 last:border-0">
+                  <div
+                    key={log.id}
+                    className="flex justify-between items-center text-sm border-b border-white/5 pb-2 last:border-0"
+                  >
                     <div>
                       <p className="font-medium">{log.message}</p>
-                      <p className="text-xs text-muted-foreground">{new Date(log.created_at).toLocaleString()}</p>
+                      <p className="text-xs text-muted-foreground">
+                        {new Date(log.created_at).toLocaleString()}
+                      </p>
                     </div>
-                    <span className="text-[10px] px-2 py-0.5 rounded-full bg-green-500/10 text-green-500 font-bold uppercase">{log.status}</span>
+                    <span className="text-[10px] px-2 py-0.5 rounded-full bg-green-500/10 text-green-500 font-bold uppercase">
+                      {log.status}
+                    </span>
                   </div>
                 ))
               ) : (
-                <p className="text-sm text-muted-foreground">No notifications found for this student.</p>
+                <p className="text-sm text-muted-foreground">
+                  No notifications found for this student.
+                </p>
               )}
             </div>
           </GlassCard>
@@ -372,53 +473,75 @@ export function StudentProfilePage() {
             <div className="space-y-4">
               {arrearDetails.length ? (
                 arrearDetails.map((item, index) => (
-                  <div key={index} className="p-4 rounded-xl border border-white/10 bg-white/5 flex items-center justify-between group hover:border-[#D4AF37]/30 transition-all">
+                  <div
+                    key={index}
+                    className="p-4 rounded-xl border border-white/10 bg-white/5 flex items-center justify-between group hover:border-[#D4AF37]/30 transition-all"
+                  >
                     <div className="flex items-center gap-4">
-                      <div className={cn(
-                        "h-10 w-10 rounded-lg flex items-center justify-center font-bold",
-                        item.severity === "High"
-                          ? "bg-red-500/10 text-red-500"
-                          : item.severity === "Medium"
-                            ? "bg-amber-500/10 text-amber-500"
-                            : "bg-blue-500/10 text-blue-500"
-                      )}>
+                      <div
+                        className={cn(
+                          "h-10 w-10 rounded-lg flex items-center justify-center font-bold",
+                          item.severity === "High"
+                            ? "bg-red-500/10 text-red-500"
+                            : item.severity === "Medium"
+                              ? "bg-amber-500/10 text-amber-500"
+                              : "bg-blue-500/10 text-blue-500",
+                        )}
+                      >
                         {item.semester}
                       </div>
                       <div>
                         <p className="font-bold">{item.subject}</p>
-                        <p className="text-xs text-muted-foreground">{item.code} • Semester {item.semester}</p>
+                        <p className="text-xs text-muted-foreground">
+                          {item.code} • Semester {item.semester}
+                        </p>
                       </div>
                     </div>
                     <div className="text-right">
-                      <p className={cn(
-                        "text-xs font-bold uppercase tracking-widest",
-                        item.severity === "High"
-                          ? "text-red-500"
-                          : item.severity === "Medium"
-                            ? "text-amber-500"
-                            : "text-blue-500"
-                      )}>
+                      <p
+                        className={cn(
+                          "text-xs font-bold uppercase tracking-widest",
+                          item.severity === "High"
+                            ? "text-red-500"
+                            : item.severity === "Medium"
+                              ? "text-amber-500"
+                              : "text-blue-500",
+                        )}
+                      >
                         {item.severity} Risk
                       </p>
                     </div>
                   </div>
                 ))
               ) : (
-                <p className="text-sm text-muted-foreground">No active arrears.</p>
+                <p className="text-sm text-muted-foreground">
+                  No active arrears.
+                </p>
               )}
             </div>
           </GlassCard>
 
           <GlassCard className="p-6">
-            <h4 className="text-sm font-bold text-[#D4AF37] mb-4 uppercase">Recent Message / Call Actions</h4>
+            <h4 className="text-sm font-bold text-[#D4AF37] mb-4 uppercase">
+              Recent Message / Call Actions
+            </h4>
             {alertActions.length ? (
               <div className="space-y-3">
                 {alertActions.map((action) => (
-                  <div key={action.id} className="flex items-start justify-between p-3 rounded-lg bg-white/5 border border-white/10">
+                  <div
+                    key={action.id}
+                    className="flex items-start justify-between p-3 rounded-lg bg-white/5 border border-white/10"
+                  >
                     <div>
-                      <p className="text-sm font-bold uppercase">{action.channel}</p>
-                      <p className="text-xs text-muted-foreground">{action.recipient || "No recipient"}</p>
-                      <p className="text-xs text-muted-foreground mt-1">{action.message}</p>
+                      <p className="text-sm font-bold uppercase">
+                        {action.channel}
+                      </p>
+                      <p className="text-xs text-muted-foreground">
+                        {action.recipient || "No recipient"}
+                      </p>
+                      <p className="text-xs text-muted-foreground mt-1">
+                        {action.message}
+                      </p>
                     </div>
                     <span className="text-[10px] px-2 py-1 rounded-full bg-green-500/10 text-green-500 font-bold uppercase">
                       {action.status}
@@ -427,7 +550,9 @@ export function StudentProfilePage() {
                 ))}
               </div>
             ) : (
-              <p className="text-sm text-muted-foreground">No call/mail actions recorded yet.</p>
+              <p className="text-sm text-muted-foreground">
+                No call/mail actions recorded yet.
+              </p>
             )}
           </GlassCard>
         </div>
