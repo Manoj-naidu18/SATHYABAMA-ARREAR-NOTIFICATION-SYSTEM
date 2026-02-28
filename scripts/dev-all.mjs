@@ -44,26 +44,63 @@ async function main() {
 
   console.log(`[dev:all] Using backend port ${selectedPort}`);
 
-  const child = spawn(
-    "npx",
+  const pythonCommand =
+    process.platform === "win32"
+      ? ".\\.venv\\Scripts\\python.exe"
+      : "./.venv/bin/python";
+  const npmCommand = process.platform === "win32" ? "npm" : "npm";
+
+  const api = spawn(
+    pythonCommand,
     [
-      "concurrently",
-      "-n",
-      "api,web",
-      "-c",
-      "cyan,magenta",
-      `.\\.venv\\Scripts\\python.exe -m uvicorn backend.main:app --host 0.0.0.0 --port ${selectedPort} --reload`,
-      "npm:dev",
+      "-m",
+      "uvicorn",
+      "backend.main:app",
+      "--host",
+      "0.0.0.0",
+      "--port",
+      String(selectedPort),
+      "--reload",
     ],
     {
-      shell: true,
       stdio: "inherit",
       env,
     },
   );
 
-  child.on("exit", (code) => {
-    process.exit(code ?? 1);
+  const web = spawn(`${npmCommand} run dev`, {
+    stdio: "inherit",
+    env,
+    shell: true,
+  });
+
+  let shuttingDown = false;
+
+  const stopChildren = () => {
+    if (shuttingDown) {
+      return;
+    }
+    shuttingDown = true;
+
+    api.kill("SIGTERM");
+    web.kill("SIGTERM");
+  };
+
+  process.on("SIGINT", stopChildren);
+  process.on("SIGTERM", stopChildren);
+
+  api.on("exit", (code) => {
+    if (!shuttingDown) {
+      stopChildren();
+      process.exit(code ?? 1);
+    }
+  });
+
+  web.on("exit", (code) => {
+    if (!shuttingDown) {
+      stopChildren();
+      process.exit(code ?? 1);
+    }
   });
 }
 
